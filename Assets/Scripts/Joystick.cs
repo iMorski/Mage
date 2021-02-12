@@ -1,60 +1,88 @@
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class Joystick : MonoBehaviour
+public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    [SerializeField] private Vector2 ScreenAreaInPercentX;
-    [SerializeField] private Vector2 ScreenAreaInPercentY;
-    [Range(0.0f, 1.0f)][SerializeField] private float DragInPercent;
-
     public static Vector2 Direction;
     public static float Distance;
 
+    private GameObject HandleArea;
+    private GameObject Handle;
+
+    private Image HandleAreaImage;
+    private Image HandleImage;
+    
+    private float HandleAreaRadius;
+
     private Vector2 BeginMousePosition;
 
-    private void Update()
+    private void Awake()
     {
-        if (Input.GetMouseButtonDown(0) && InScreenArea())
-        {
-            BeginMousePosition = MousePosition();
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            Vector2 DirectionInPixel = -1 * (BeginMousePosition - MousePosition());
-            Vector2 DirectionInPixelInCircle = Vector2.ClampMagnitude(DirectionInPixel,
-                DragInPercent * Height());
+        HandleArea = transform.GetChild(0).gameObject;
+        Handle = transform.GetChild(1).gameObject;
 
-            float DragInPixel = DragInPercent * Height();
-            float DistanceInPixel = Vector2.Distance(new Vector2(0.0f, 0.0f), DirectionInPixelInCircle);
-
-            Direction = new Vector2(DirectionInPixelInCircle.x / DragInPixel,
-                DirectionInPixelInCircle.y / DragInPixel);
-            Distance = DistanceInPixel / DragInPixel;
-        }
+        HandleAreaImage = HandleArea.GetComponent<Image>();
+        HandleImage = Handle.GetComponent<Image>();
     }
 
-    private bool InScreenArea()
+    private void Start()
     {
-        Vector2 ScreenAreaInPixelX = ScreenAreaInPercentX * Width();
-        Vector2 ScreenAreaInPixelY = ScreenAreaInPercentY * Height();
+        Rect HandleAreaRect = HandleArea.GetComponent<RectTransform>().rect;
         
-        return MousePosition().x > ScreenAreaInPixelX.x &&
-               MousePosition().x < ScreenAreaInPixelX.y &&
-               MousePosition().y > ScreenAreaInPixelY.x &&
-               MousePosition().y < ScreenAreaInPixelY.y;
+        HandleAreaRadius = Math.Max(HandleAreaRect.width, HandleAreaRect.height) / 2.0f *
+                           GetComponentInParent<Canvas>().scaleFactor;
     }
 
-    private Vector2 MousePosition()
+    public void OnPointerDown(PointerEventData Data)
     {
-        return Input.mousePosition;
+        if (!InScreen(Data)) return;
+        
+        BeginMousePosition = MousePosition(Data);
+
+        HandleArea.transform.position = BeginMousePosition;
+        Handle.transform.position = BeginMousePosition;
+
+        HandleAreaImage.enabled = true;
+        HandleImage.enabled = true;
     }
 
-    private float Width()
+    public void OnDrag(PointerEventData Data)
     {
-        return Screen.width;
+        Vector2 DirectionInPixel = MousePosition(Data) - BeginMousePosition;
+        Vector2 DirectionInPixelInCircle = Vector2.ClampMagnitude(DirectionInPixel, HandleAreaRadius);
+
+        float DragDistance = Vector2.Distance(MousePosition(Data), BeginMousePosition);
+
+        if (DragDistance > HandleAreaRadius ||
+            DragDistance > HandleAreaRadius)
+        {
+            BeginMousePosition = BeginMousePosition + (DirectionInPixel - DirectionInPixelInCircle);
+        }
+        
+        HandleArea.transform.position = BeginMousePosition;
+        Handle.transform.position = MousePosition(Data);
+        
+        Direction = new Vector2(DirectionInPixelInCircle.x / HandleAreaRadius,
+            DirectionInPixelInCircle.y / HandleAreaRadius);
+        Distance = Vector2.Distance(new Vector2(0.0f, 0.0f), 
+                       DirectionInPixelInCircle) / HandleAreaRadius;
     }
-    
-    private float Height()
+
+    public void OnPointerUp(PointerEventData Data)
     {
-        return Screen.height;
+        HandleAreaImage.enabled = false;
+        HandleImage.enabled = false;
+    }
+
+    private bool InScreen(PointerEventData Data)
+    {
+        return Data.hovered.Contains(gameObject);
+    }
+
+    private Vector2 MousePosition(PointerEventData Data)
+    {
+        return Data.position;
     }
 }
