@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    public static Vector2 Direction;
-    public static float Distance;
+    [NonSerialized] public Vector2 Direction;
+    [NonSerialized] public float Distance;
 
     private GameObject HandleArea;
     private GameObject Handle;
