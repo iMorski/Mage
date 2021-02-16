@@ -72,6 +72,9 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     public void OnPointerUp(PointerEventData Data)
     {
+        Direction = new Vector2(0.0f, 0.0f);
+        Distance = 0.0f;
+        
         HandleAreaImage.enabled = false;
         HandleImage.enabled = false;
     }
