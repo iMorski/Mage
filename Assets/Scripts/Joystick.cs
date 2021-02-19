@@ -13,11 +13,9 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     private Image HandleAreaImage;
     private Image HandleImage;
-    
-    private float HandleAreaRadius;
 
     private Vector2 BeginMousePosition;
-
+    
     private void Awake()
     {
         HandleArea = transform.GetChild(0).gameObject;
@@ -26,7 +24,8 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         HandleAreaImage = HandleArea.GetComponent<Image>();
         HandleImage = Handle.GetComponent<Image>();
     }
-
+    
+    private float HandleAreaRadius;
     private void Start()
     {
         Rect HandleAreaRect = HandleArea.GetComponent<RectTransform>().rect;
@@ -34,7 +33,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         HandleAreaRadius = Math.Max(HandleAreaRect.width, HandleAreaRect.height) / 2.0f *
                            GetComponentInParent<Canvas>().scaleFactor;
     }
-
+    
     public void OnPointerDown(PointerEventData Data)
     {
         if (!InScreen(Data)) return;
