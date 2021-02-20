@@ -8,8 +8,6 @@ public class CharacterSphere : MonoBehaviour
     [SerializeField] private Transform SphereMesh;
     
     private SphereCollider Collider;
-    
-    private bool OnSphere;
 
     private void Awake()
     {
@@ -27,22 +25,24 @@ public class CharacterSphere : MonoBehaviour
 
     private void OnTap() { Resolve(); }
     private void OnSwipe(Vector2 Direction)  { Resolve(); }
+    
+    private bool OnCast;
 
     private void Resolve()
     {
         StopAllCoroutines();
 
-        if (!OnSphere)
+        if (!OnCast)
         {
             StartCoroutine(SphereEnable());
 
-            OnSphere = true;
+            OnCast = true;
         }
         else
         {
             StartCoroutine(SphereDisable());
 
-            OnSphere = false;
+            OnCast = false;
         }
     }
 

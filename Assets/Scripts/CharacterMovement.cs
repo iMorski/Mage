@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-    [Range(0.0f, 1000.0f)][SerializeField] private float Speed;
-    [Range(0.0f, 1.0f)] [SerializeField] private float SmoothTime;
+    [SerializeField] private float Speed;
+    [SerializeField] private float SmoothTime;
     
     private Joystick Joystick;
 
@@ -29,55 +29,75 @@ public class CharacterMovement : MonoBehaviour
         CharacterContainer.Touch.Tap += OnTap;
         CharacterContainer.Touch.Swipe += OnSwipe;
     }
-
-    private bool OnSphere;
+    
     private void OnTap() { Resolve(); }
-    private void OnSwipe(Vector2 Direction)  { Resolve(); }
+    private void OnSwipe(Vector2 Direction) { Resolve(); }
+
+    private bool OnCast;
 
     private void Resolve()
     {
-        if (!OnSphere)
+        if (!OnCast)
         {
             Animator.CrossFade("Movement-Cast", SmoothTime);
 
-            OnSphere = true;
+            OnCast = true;
         }
         else
         {
             Animator.CrossFade("Movement-Free", SmoothTime);
 
-            OnSphere = false;
+            OnCast = false;
         }
     }
     
     private Vector3 Direction;
-    private float Distance;
+
+    private float AnimatorSpeed;
+    private float AnimatorVelocity;
+    
     private void FixedUpdate()
     {
         if (OnDrag())
         {
-            Direction = new Vector3(Joystick.Direction.x, 0.0f, Joystick.Direction.y);
-            Distance = Joystick.Distance;
+            Direction = Vector3.Normalize(new Vector3(
+                Joystick.Direction.x, 0.0f, Joystick.Direction.y));
 
+            if (AnimatorSpeed < 1.0f)
+            {
+                AnimatorSpeed = Mathf.SmoothDamp(AnimatorSpeed, 1.0f,
+                    ref AnimatorVelocity, SmoothTime);
+                
+                Animator.SetFloat("Speed", AnimatorSpeed);
+            }
+            
             transform.rotation = Quaternion.LookRotation(Direction);
         }
         else
         {
             SmoothDirection();
-            SmoothDistance();
+
+            if (AnimatorSpeed > 0.0f)
+            {
+                AnimatorSpeed = Mathf.SmoothDamp(AnimatorSpeed, 0.0f,
+                    ref AnimatorVelocity, SmoothTime);
+                
+                Animator.SetFloat("Speed", AnimatorSpeed);
+            }
         }
         
         Rigidbody.velocity = Direction * SmoothSpeed();
-        Animator.SetFloat("Speed", Distance);
     }
 
     private bool OnDrag()
     {
-        return Joystick.Direction != new Vector2(0.0f, 0.0f) || Joystick.Distance != 0.0f;
+        return Joystick.Direction != new Vector2(0.0f, 0.0f) ||
+               Joystick.Distance != 0.0f;
     }
 
     private float DirectionVelocityX;
     private float DirectionVelocityZ;
+    
     private void SmoothDirection()
     {
         if (Direction.x != 0.0f) Direction.x =
@@ -88,21 +108,15 @@ public class CharacterMovement : MonoBehaviour
 
         Direction = new Vector3(Direction.x, 0.0f, Direction.z);
     }
-    
-    private float DistanceVelocity;
-    private void SmoothDistance()
-    {
-        if (Distance > 0.0f) Distance =
-            Mathf.SmoothDamp(Distance, 0.0f, ref DistanceVelocity, SmoothTime);
-    }
 
     private float SpeedVelocity;
+    
     private float SmoothSpeed()
     {
-        if (OnSphere && CurrentSpeed > Speed / 2.0f) CurrentSpeed =
+        if (OnCast && CurrentSpeed > Speed / 2.0f) CurrentSpeed =
             Mathf.SmoothDamp(CurrentSpeed, Speed / 2.0f, ref SpeedVelocity, SmoothTime);
         
-        else if (!OnSphere && CurrentSpeed < Speed) CurrentSpeed =
+        else if (!OnCast && CurrentSpeed < Speed) CurrentSpeed =
             Mathf.SmoothDamp(CurrentSpeed, Speed, ref SpeedVelocity, SmoothTime);
 
         return CurrentSpeed * Time.fixedDeltaTime;

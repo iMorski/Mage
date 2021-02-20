@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterSphereCapture : MonoBehaviour
@@ -7,31 +8,62 @@ public class CharacterSphereCapture : MonoBehaviour
     [SerializeField] private float ForceMultiplier;
     [SerializeField] private float CaptureTime;
 
-    [NonSerialized] public Rigidbody Rigidbody;
+    private List<Collider> BlockInSphereCollider = new List<Collider>();
+    private List<Coroutine> BlockInSphereCoroutine = new List<Coroutine>();
     
     private void OnTriggerEnter(Collider Other)
     {
         if (Other.CompareTag("Block"))
         {
-            Rigidbody = Other.GetComponent<Rigidbody>();
-            Rigidbody.useGravity = false;
+            Rigidbody Rigidbody = Other.GetComponent<Rigidbody>();
             
-            StartCoroutine(Capture());
+            Rigidbody.useGravity = false;
+
+            BlockInSphereCollider.Add(Other);
+            BlockInSphereCoroutine.Add(
+                StartCoroutine(Capture(Rigidbody)));
         }
+    }
+
+    [NonSerialized]
+    public Rigidbody PushRigidbody;
+
+    private void FixedUpdate()
+    {
+        Collider MinBlock = null;
+
+        foreach (Collider Block in BlockInSphereCollider)
+        {
+            if (!MinBlock) MinBlock = Block;
+
+            float MinBlockDistance = Vector3.Distance(MinBlock.transform.position, transform.position);
+            float BlockDistance = Vector3.Distance(Block.transform.position, transform.position);
+
+            if (BlockDistance < MinBlockDistance) MinBlock = Block;
+        }
+
+        if (MinBlock && PushRigidbody != MinBlock.GetComponent<Rigidbody>())
+            PushRigidbody = MinBlock.GetComponent<Rigidbody>();
     }
 
     private void OnTriggerExit(Collider Other)
     {
         if (Other.CompareTag("Block"))
         {
-            StopAllCoroutines();
-        
+            Rigidbody Rigidbody = Other.GetComponent<Rigidbody>();
+            Coroutine Coroutine = BlockInSphereCoroutine[
+                BlockInSphereCollider.IndexOf(Other)];
+
             Rigidbody.useGravity = true;
-            Rigidbody = null;
+            
+            StopCoroutine(Coroutine);
+
+            BlockInSphereCollider.Remove(Other);
+            BlockInSphereCoroutine.Remove(Coroutine);
         }
     }
     
-    private IEnumerator Capture()
+    private IEnumerator Capture(Rigidbody Rigidbody)
     {
         if (!(Rigidbody.velocity.x != 0.0f) ||
             !(Rigidbody.velocity.y != 0.0f) ||

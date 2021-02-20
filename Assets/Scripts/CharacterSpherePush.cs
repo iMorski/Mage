@@ -20,10 +20,10 @@ public class CharacterSpherePush : MonoBehaviour
 
     private void OnSwipe(Vector2 Direction)
     {
-        if (!SphereCapture.Rigidbody) return;
+        if (!SphereCapture.PushRigidbody) return;
         
         SphereCapture.StopAllCoroutines();
-        SphereCapture.Rigidbody.AddForce(new Vector3
+        SphereCapture.PushRigidbody.AddForce(new Vector3
             (Direction.x, 0.0f, Direction.y) * ForceMultiplier);
     }
 }
