@@ -6,20 +6,31 @@ public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
 {
     [SerializeField] private float TapDistance;
     
+    public delegate void OnTouchBegin();
+    public event OnTouchBegin TouchBegin;
+    
     public delegate void OnSwipe(Vector2 Direction);
     public event OnSwipe Swipe;
 
     public delegate void OnTap();
     public event OnTap Tap;
+    
+    public delegate void OnTouchFinish();
+    public event OnTouchFinish TouchFinish;
 
     private Vector2 BeginMousePosition;
 
     public void OnPointerDown(PointerEventData Data)
     {
-        if (InScreen(Data)) BeginMousePosition = MousePosition(Data);
+        if (!InScreen(Data)) return;
+        
+        TouchBegin?.Invoke();
+            
+        BeginMousePosition = MousePosition(Data);
     }
 
     private bool OnSwipeFinish;
+    
     public void OnDrag(PointerEventData Data)
     {
         if (!OnSwipeFinish && DragDistance(Data) > TapDistance)
@@ -41,6 +52,8 @@ public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
 
     public void OnPointerUp(PointerEventData Data)
     {
+        TouchFinish?.Invoke();
+        
         if (DragDistance(Data) < TapDistance)
         {
             Tap?.Invoke();
