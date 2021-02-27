@@ -4,7 +4,9 @@ public class ComputerContainer : MonoBehaviour
 {
     public static ComputerContainer Instance;
     
-    public float Distance;
+    public float DistanceToStop;
+    public float WaitTimeMin;
+    public float WaitTimeMax;
     
     private GameObject[] BlockOnScene;
 
@@ -30,5 +32,10 @@ public class ComputerContainer : MonoBehaviour
         }
 
         return BlockInDistance;
+    }
+
+    public float Wait()
+    {
+        return Random.Range(WaitTimeMin, WaitTimeMax);
     }
 }

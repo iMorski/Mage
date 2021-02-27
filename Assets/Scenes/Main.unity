@@ -2350,10 +2350,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1315536609}
-  - component: {fileID: 1315536612}
   - component: {fileID: 1315536608}
   - component: {fileID: 1315536611}
   - component: {fileID: 1315536610}
+  - component: {fileID: 1315536612}
   m_Layer: 0
   m_Name: Container
   m_TagString: Untagged
@@ -2408,7 +2408,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36a6ab8f22fb74690b78e4d92e7f3608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Distance: 2.5
+  DistanceToStop: 2.75
+  WaitTimeMin: 0.15
+  WaitTimeMax: 0.65
 --- !u!114 &1315536611
 MonoBehaviour:
   m_ObjectHideFlags: 0

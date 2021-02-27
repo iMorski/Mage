@@ -2,13 +2,10 @@ using UnityEngine;
 
 public class ComputerSphere : CharacterSphere
 {
-    private void Awake()
-    {
-        SphereCollider = GetComponent<SphereCollider>();
-    }
-
     private void FixedUpdate()
     {
+        /*
+        
         GameObject Block = ComputerContainer.Instance.GetBlock(transform);
         
         Vector3 BlockPosition = Block.transform.position;
@@ -16,10 +13,12 @@ public class ComputerSphere : CharacterSphere
 
         float Distance = Vector3.Distance(BlockPosition, Position);
 
-        if (Distance > ComputerContainer.Instance.Distance && OnCast ||
-            Distance < ComputerContainer.Instance.Distance && !OnCast)
+        if (Distance > ComputerContainer.Instance.DistanceToStop && OnCast ||
+            Distance < ComputerContainer.Instance.DistanceToStop && !OnCast)
         {
             ChangeState();
         }
+        
+        */
     }
 }

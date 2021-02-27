@@ -14,7 +14,7 @@ public class PlayerMovement : CharacterMovement
 
     private void OnTouchBegin() { ChangeState(); }
     private void OnTouchFinish() { ChangeState(); }
-    
+
     private void FixedUpdate()
     {
         if (Joystick.Direction != new Vector2(0.0f, 0.0f))
@@ -30,7 +30,7 @@ public class PlayerMovement : CharacterMovement
             ChangeDirection();
             ChangeAnimatorValue(0.0f);
         }
-        
+
         Rigidbody.velocity = Direction * ChangeSpeed();
     }
 }

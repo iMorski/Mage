@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,8 +8,14 @@ public class CharacterSphere : MonoBehaviour
     public delegate void OnChangeCast(bool OnCast);
     public event OnChangeCast ChangeCast;
     
-    [NonSerialized] public SphereCollider SphereCollider;
-    [NonSerialized] public bool OnCast;
+    private SphereCollider SphereCollider;
+    
+    private void Awake()
+    {
+        SphereCollider = GetComponent<SphereCollider>();
+    }
+    
+    private bool OnCast;
 
     public void ChangeState()
     {

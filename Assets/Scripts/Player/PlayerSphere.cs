@@ -1,11 +1,5 @@
-using UnityEngine;
-
 public class PlayerSphere : CharacterSphere
 {
-    private void Awake()
-    {
-        SphereCollider = GetComponent<SphereCollider>();
-    }
     private void Start()
     {
         PlayerContainer.Instance.Touch.TouchBegin += OnTouchBegin;

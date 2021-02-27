@@ -5,14 +5,16 @@ public class CharacterMovement : MonoBehaviour
 {
     [NonSerialized] public Rigidbody Rigidbody;
     [NonSerialized] public Animator Animator;
-    
-    private bool OnCast;
+
+    [NonSerialized] public Vector3 Direction;
     
     private void Awake()
     {
         Rigidbody = GetComponent<Rigidbody>();
         Animator = GetComponent<Animator>();
     }
+    
+    private bool OnCast;
 
     public void ChangeState()
     {
@@ -30,13 +32,6 @@ public class CharacterMovement : MonoBehaviour
 
             OnCast = true;
         }
-    }
-
-    [NonSerialized] public Vector3 Direction;
-
-    public void ChangePosition()
-    {
-        
     }
     
     private Vector3 DirectionVelocity;
