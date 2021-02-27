@@ -1,24 +1,11 @@
 using UnityEngine;
 
-public class PlayerSpherePush : MonoBehaviour
+public class PlayerSpherePush : CharacterSpherePush
 {
-    private CharacterSphereCapture CharacterSphereCapture;
-    
-    private void Awake()
-    {
-        CharacterSphereCapture = GetComponent<CharacterSphereCapture>();
-    }
-
     private void Start()
     {
-        PlayerContainer.Instance.Touch.Swipe += OnSwipe;
+        PlayerContainer.Instance.Touch.SwipeRelease += OnSwipeRelease;
     }
 
-    private void OnSwipe(Vector2 Direction)
-    {
-        if (!CharacterSphereCapture.BlockCollider) return;
-        
-        CharacterSphereCapture.BlockCollider.GetComponent<Rigidbody>().AddForce(new Vector3(
-            Direction.x, 0.0f, Direction.y) * CharacterContainer.Instance.SpherePushForce);
-    }
+    private void OnSwipeRelease(Vector2 Direction) { Push(Direction); }
 }

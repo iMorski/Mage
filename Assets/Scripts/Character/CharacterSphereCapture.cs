@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class CharacterSphereCapture : MonoBehaviour
 {
-    [NonSerialized] public Collider BlockCollider;
+    [NonSerialized] public Collider BlockOnSelect;
     
-    private List<Collider> BlockInSphereCollider = new List<Collider>();
-    private List<Coroutine> BlockInSphereCoroutine = new List<Coroutine>();
+    [NonSerialized] public List<Collider> BlockInSphereCollider = new List<Collider>();
+    [NonSerialized] public List<Coroutine> BlockInSphereCoroutine = new List<Coroutine>();
     
     private void OnTriggerEnter(Collider Other)
     {
@@ -37,8 +37,8 @@ public class CharacterSphereCapture : MonoBehaviour
             }
         }
 
-        if (BlockInDistance && BlockCollider != BlockInDistance)
-            BlockCollider = BlockInDistance;
+        if (BlockInDistance && BlockInDistance != BlockOnSelect)
+            BlockOnSelect = BlockInDistance;
     }
 
     private void OnTriggerExit(Collider Other)
@@ -51,26 +51,23 @@ public class CharacterSphereCapture : MonoBehaviour
 
             Rigidbody.useGravity = true;
             
-            StopCoroutine(Coroutine);
+            if (Coroutine != null) StopCoroutine(Coroutine);
 
             BlockInSphereCollider.Remove(Other);
             BlockInSphereCoroutine.Remove(Coroutine);
 
-            if (!(Other != BlockCollider)) BlockCollider = null;
+            if (!(Other != BlockOnSelect)) BlockOnSelect = null;
         }
     }
     
     private IEnumerator Capture(Rigidbody Rigidbody)
     {
-        float CaptureForce = CharacterContainer.Instance.SphereCaptureForce;
-        float CaptureTime = CharacterContainer.Instance.SphereCaptureTime;
-        
-        if (!BlockInMotion(Rigidbody))
+        if (BlockOnGround(Rigidbody))
         {
             Rigidbody.AddForce(new Vector3(
-                0.0f, 1.0f, 0.0f) * CaptureForce);
+                0.0f, 1.0f, 0.0f) * CharacterContainer.Instance.SphereCaptureRiseForce);
 
-            yield return new WaitForSeconds(CaptureTime);
+            yield return new WaitForSeconds(CharacterContainer.Instance.SphereCaptureRiseTime);
         }
         
         Vector3 Velocity = new Vector3();
@@ -78,10 +75,20 @@ public class CharacterSphereCapture : MonoBehaviour
         while (BlockInMotion(Rigidbody))
         {
             Rigidbody.velocity = Vector3.SmoothDamp(Rigidbody.velocity, 
-                new Vector3(), ref Velocity, CaptureTime);
+                new Vector3(), ref Velocity, CharacterContainer.Instance.SphereCaptureTime);
 
             yield return new WaitForFixedUpdate();
         }
+    }
+
+    private bool BlockOnGround(Rigidbody Rigidbody)
+    {
+        float GroundDistance = 0.0f;
+        
+        if (Physics.Raycast(Rigidbody.transform.position, new Vector3(
+            0.0f, -1.0f, 0.0f), out RaycastHit Hit)) GroundDistance = Hit.distance;
+        
+        return GroundDistance < CharacterContainer.Instance.SphereCaptureRiseDistance;
     }
 
     private bool BlockInMotion(Rigidbody Rigidbody)

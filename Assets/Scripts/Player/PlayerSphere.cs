@@ -8,10 +8,10 @@ public class PlayerSphere : CharacterSphere
     }
     private void Start()
     {
-        PlayerContainer.Instance.Touch.Tap += OnTap;
-        PlayerContainer.Instance.Touch.Swipe += OnSwipe;
+        PlayerContainer.Instance.Touch.TouchBegin += OnTouchBegin;
+        PlayerContainer.Instance.Touch.TouchFinish += OnTouchFinish;
     }
-    
-    private void OnTap() { ChangeState(); }
-    private void OnSwipe(Vector2 Direction) { ChangeState(); }
+
+    private void OnTouchBegin() { ChangeState(); }
+    private void OnTouchFinish() { ChangeState(); }
 }

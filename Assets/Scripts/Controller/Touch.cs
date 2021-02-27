@@ -8,12 +8,15 @@ public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
     
     public delegate void OnTouchBegin();
     public event OnTouchBegin TouchBegin;
-    
-    public delegate void OnSwipe(Vector2 Direction);
-    public event OnSwipe Swipe;
 
     public delegate void OnTap();
     public event OnTap Tap;
+    
+    public delegate void OnSwipe(Vector2 Direction);
+    public event OnSwipe Swipe;
+    
+    public delegate void OnSwipeRelease(Vector2 Direction);
+    public event OnSwipeRelease SwipeRelease;
     
     public delegate void OnTouchFinish();
     public event OnTouchFinish TouchFinish;
@@ -35,16 +38,7 @@ public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
     {
         if (!OnSwipeFinish && DragDistance(Data) > TapDistance)
         {
-            Vector2 Direction = MousePosition(Data) - BeginMousePosition;
-            
-            float MaxValue = Math.Max(
-                Math.Abs(Direction.x), Math.Abs(Direction.y));
-            
-            Vector2 DirectionInCircle = Vector2.ClampMagnitude(Direction, MaxValue);
-            Vector2 DirectionNormalized = new Vector2(DirectionInCircle.x / MaxValue,
-                DirectionInCircle.y / MaxValue);
-            
-            Swipe?.Invoke(DirectionNormalized);
+            Swipe?.Invoke(GetDirection(Data));
 
             OnSwipeFinish = true;
         }
@@ -54,12 +48,24 @@ public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
     {
         TouchFinish?.Invoke();
         
-        if (DragDistance(Data) < TapDistance)
-        {
-            Tap?.Invoke();
-        }
+        if (DragDistance(Data) < TapDistance) Tap?.Invoke();
+        else SwipeRelease?.Invoke(GetDirection(Data));
         
         OnSwipeFinish = false;
+    }
+
+    private Vector2 GetDirection(PointerEventData Data)
+    {
+        Vector2 Direction = MousePosition(Data) - BeginMousePosition;
+            
+        float MaxValue = Math.Max(
+            Math.Abs(Direction.x), Math.Abs(Direction.y));
+            
+        Vector2 DirectionInCircle = Vector2.ClampMagnitude(Direction, MaxValue);
+        Vector2 DirectionNormalized = new Vector2(DirectionInCircle.x / MaxValue,
+            DirectionInCircle.y / MaxValue);
+
+        return DirectionNormalized;
     }
 
     private float DragDistance(PointerEventData Data)

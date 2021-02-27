@@ -2,24 +2,18 @@ using UnityEngine;
 
 public class PlayerMovement : CharacterMovement
 {
-    private void Awake()
-    {
-        Rigidbody = GetComponent<Rigidbody>();
-        Animator = GetComponent<Animator>();
-    }
-    
     private Joystick Joystick;
 
     private void Start()
     {
         Joystick = PlayerContainer.Instance.Joystick;
         
-        PlayerContainer.Instance.Touch.Tap += OnTap;
-        PlayerContainer.Instance.Touch.Swipe += OnSwipe;
+        PlayerContainer.Instance.Touch.TouchBegin += OnTouchBegin;
+        PlayerContainer.Instance.Touch.TouchFinish += OnTouchFinish;
     }
 
-    private void OnTap() { ChangeState(); }
-    private void OnSwipe(Vector2 Direction) { ChangeState(); }
+    private void OnTouchBegin() { ChangeState(); }
+    private void OnTouchFinish() { ChangeState(); }
     
     private void FixedUpdate()
     {
@@ -37,6 +31,6 @@ public class PlayerMovement : CharacterMovement
             ChangeAnimatorValue(0.0f);
         }
         
-        Rigidbody.velocity = Direction * SmoothSpeed();
+        Rigidbody.velocity = Direction * ChangeSpeed();
     }
 }

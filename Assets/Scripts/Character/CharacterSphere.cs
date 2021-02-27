@@ -5,6 +5,9 @@ using UnityEngine;
 public class CharacterSphere : MonoBehaviour
 {
     [SerializeField] private Transform SphereMesh;
+
+    public delegate void OnChangeCast(bool OnCast);
+    public event OnChangeCast ChangeCast;
     
     [NonSerialized] public SphereCollider SphereCollider;
     [NonSerialized] public bool OnCast;
@@ -15,8 +18,7 @@ public class CharacterSphere : MonoBehaviour
 
         if (!OnCast)
         {
-            StartCoroutine(ChangeScale(
-                CharacterContainer.Instance.SphereRadius));
+            StartCoroutine(ChangeScale(CharacterContainer.Instance.SphereRadius));
 
             OnCast = true;
         }
@@ -26,6 +28,8 @@ public class CharacterSphere : MonoBehaviour
 
             OnCast = false;
         }
+        
+        ChangeCast?.Invoke(OnCast);
     }
     
     private float RadiusVelocity;

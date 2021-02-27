@@ -7,6 +7,12 @@ public class CharacterMovement : MonoBehaviour
     [NonSerialized] public Animator Animator;
     
     private bool OnCast;
+    
+    private void Awake()
+    {
+        Rigidbody = GetComponent<Rigidbody>();
+        Animator = GetComponent<Animator>();
+    }
 
     public void ChangeState()
     {
@@ -27,6 +33,11 @@ public class CharacterMovement : MonoBehaviour
     }
 
     [NonSerialized] public Vector3 Direction;
+
+    public void ChangePosition()
+    {
+        
+    }
     
     private Vector3 DirectionVelocity;
     
@@ -64,7 +75,7 @@ public class CharacterMovement : MonoBehaviour
     private float SpeedCurrent;
     private float SpeedVelocity;
     
-    public float SmoothSpeed()
+    public float ChangeSpeed()
     {
         float MoveSpeed = CharacterContainer.Instance.MoveSpeed;
         float MoveSmoothTime = CharacterContainer.Instance.MoveSmoothTime;

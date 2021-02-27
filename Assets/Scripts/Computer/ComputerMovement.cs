@@ -29,6 +29,6 @@ public class ComputerMovement : CharacterMovement
             ChangeAnimatorValue(0.0f);
         }
         
-        Rigidbody.velocity = Direction * SmoothSpeed();
+        Rigidbody.velocity = Direction * ChangeSpeed();
     }
 }
