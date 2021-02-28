@@ -2382,6 +2382,7 @@ MonoBehaviour:
   SphereCaptureRiseTime: 0.05
   SphereCaptureTime: 0.05
   SpherePushForce: 1500
+  SpherePushWaitTime: 0.5
 --- !u!4 &1315536609
 Transform:
   m_ObjectHideFlags: 0
@@ -2409,7 +2410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DistanceToStop: 2.75
-  WaitTimeMin: 0.15
+  WaitTimeMin: 0.25
   WaitTimeMax: 0.65
 --- !u!114 &1315536611
 MonoBehaviour:
@@ -2453,6 +2454,7 @@ GameObject:
   - component: {fileID: 1335044237}
   - component: {fileID: 1335044241}
   - component: {fileID: 1335044238}
+  - component: {fileID: 1335044239}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -2487,6 +2489,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SphereMesh: {fileID: 1668419273}
+--- !u!114 &1335044239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335044236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9584b5511378e42bbb2f8677f5ac094c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &1335044241
 SphereCollider:
   m_ObjectHideFlags: 0

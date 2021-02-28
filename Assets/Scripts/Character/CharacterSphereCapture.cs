@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class CharacterSphereCapture : MonoBehaviour
 {
-    [NonSerialized] public Collider BlockOnSelect;
-    
     [NonSerialized] public List<Collider> BlockInSphereCollider = new List<Collider>();
     [NonSerialized] public List<Coroutine> BlockInSphereCoroutine = new List<Coroutine>();
     
@@ -23,24 +21,6 @@ public class CharacterSphereCapture : MonoBehaviour
         }
     }
     
-    private void FixedUpdate()
-    {
-        Collider BlockInDistance = null;
-
-        foreach (Collider Block in BlockInSphereCollider)
-        {
-            if (!BlockInDistance ||
-                Vector3.Distance(Block.transform.position, transform.position) <
-                Vector3.Distance(BlockInDistance.transform.position, transform.position))
-            {
-                BlockInDistance = Block;
-            }
-        }
-
-        if (BlockInDistance && BlockInDistance != BlockOnSelect)
-            BlockOnSelect = BlockInDistance;
-    }
-
     private void OnTriggerExit(Collider Other)
     {
         if (Other.CompareTag("Block"))
@@ -55,8 +35,6 @@ public class CharacterSphereCapture : MonoBehaviour
 
             BlockInSphereCollider.Remove(Other);
             BlockInSphereCoroutine.Remove(Coroutine);
-
-            if (!(Other != BlockOnSelect)) BlockOnSelect = null;
         }
     }
     
@@ -64,10 +42,13 @@ public class CharacterSphereCapture : MonoBehaviour
     {
         if (BlockOnGround(Rigidbody))
         {
+            float RiseForce = CharacterContainer.Instance.SphereCaptureRiseForce;
+            float RiseTime = CharacterContainer.Instance.SphereCaptureRiseTime;
+            
             Rigidbody.AddForce(new Vector3(
-                0.0f, 1.0f, 0.0f) * CharacterContainer.Instance.SphereCaptureRiseForce);
+                0.0f, 1.0f, 0.0f) * RiseForce);
 
-            yield return new WaitForSeconds(CharacterContainer.Instance.SphereCaptureRiseTime);
+            yield return new WaitForSeconds(RiseTime);
         }
         
         Vector3 Velocity = new Vector3();

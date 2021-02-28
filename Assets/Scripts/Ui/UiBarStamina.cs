@@ -7,7 +7,7 @@ public class UiBarStamina : UiBarController
 
     private void Start()
     {
-        PlayerSphere.ChangeCast += OnChangeCast;
+        //PlayerSphere.ChangeCast += OnChangeCast;
     }
 
     private void OnChangeCast(bool OnCast)

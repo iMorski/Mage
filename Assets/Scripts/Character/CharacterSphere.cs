@@ -1,12 +1,10 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class CharacterSphere : MonoBehaviour
 {
     [SerializeField] private Transform SphereMesh;
-
-    public delegate void OnChangeCast(bool OnCast);
-    public event OnChangeCast ChangeCast;
     
     private SphereCollider SphereCollider;
     
@@ -14,8 +12,8 @@ public class CharacterSphere : MonoBehaviour
     {
         SphereCollider = GetComponent<SphereCollider>();
     }
-    
-    private bool OnCast;
+
+    [NonSerialized] public bool OnCast;
 
     public void ChangeState()
     {
@@ -33,8 +31,6 @@ public class CharacterSphere : MonoBehaviour
 
             OnCast = false;
         }
-        
-        ChangeCast?.Invoke(OnCast);
     }
     
     private float RadiusVelocity;
