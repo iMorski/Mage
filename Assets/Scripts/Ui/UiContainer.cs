@@ -4,13 +4,12 @@ public class UiContainer : MonoBehaviour
 {
     public static UiContainer Instance;
 
+    public Camera Camera;
+    
     public float BarDistanceToCharacter;
     public float BarDistanceToBlock;
     
     public float BarFadeRate;
-    
-    public float BarStaminaIncreaseRate;
-    public float BarStaminaDecreaseRate;
 
     private void Awake()
     {

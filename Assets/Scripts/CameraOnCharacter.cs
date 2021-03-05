@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UiCameraFollow : MonoBehaviour
+public class CameraOnCharacter : MonoBehaviour
 {
     [SerializeField] private Transform Character;
     [SerializeField] private float SmoothTime;
@@ -16,11 +16,11 @@ public class UiCameraFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 CharacterPosition = new Vector3(Position.x + Character.position.x,
+        Vector3 OnCharacterPosition = new Vector3(Position.x + Character.position.x,
             Position.y, Position.z + Character.position.z);
-        Vector3 CharacterPositionSmooth = Vector3.SmoothDamp(transform.position,
-            CharacterPosition, ref Velocity, SmoothTime);
+        Vector3 OnCharacterPositionSmooth = Vector3.SmoothDamp(transform.position,
+            OnCharacterPosition, ref Velocity, SmoothTime);
         
-        transform.position = CharacterPositionSmooth;
+        transform.position = OnCharacterPositionSmooth;
     }
 }

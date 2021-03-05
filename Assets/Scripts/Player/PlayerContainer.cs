@@ -7,6 +7,9 @@ public class PlayerContainer : MonoBehaviour
     public Joystick Joystick;
     public Touch Touch;
 
+    public float PowerInRate;
+    public float PowerOutRate;
+
     private void Awake()
     {
         Instance = this;

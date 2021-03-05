@@ -16,14 +16,14 @@ public class CharacterMovement : MonoBehaviour
 
     public void ChangeState()
     {
-        if (OnCast)
+        if (!OnCast)
         {
-            Animator.CrossFade("Movement-Free",
+            Animator.CrossFade("Movement-Cast",
                 CharacterContainer.Instance.MoveSmoothTime);
         }
         else
         {
-            Animator.CrossFade("Movement-Cast",
+            Animator.CrossFade("Movement-Free",
                 CharacterContainer.Instance.MoveSmoothTime);
         }
         
@@ -48,7 +48,7 @@ public class CharacterMovement : MonoBehaviour
             SmoothAnimatorSpeed(0.0f);
         }
 
-        Rigidbody.velocity = Direction * SmoothSpeed();
+        Rigidbody.velocity = Position * SmoothSpeed();
     }
     
     private Vector3 PositionVelocity;

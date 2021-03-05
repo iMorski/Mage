@@ -1,19 +1,12 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
 public class CharacterSphere : MonoBehaviour
 {
+    [SerializeField] private Transform Sphere;
     [SerializeField] private Transform SphereMesh;
-    
-    private SphereCollider SphereCollider;
-    
-    private void Awake()
-    {
-        SphereCollider = GetComponent<SphereCollider>();
-    }
 
-    [NonSerialized] public bool OnCast;
+    private bool OnCast;
 
     public void ChangeState()
     {
@@ -21,38 +14,33 @@ public class CharacterSphere : MonoBehaviour
 
         if (!OnCast)
         {
-            StartCoroutine(ChangeScale(CharacterContainer.Instance.SphereRadius));
-
-            OnCast = true;
+            StartCoroutine(ChangeScale(
+                CharacterContainer.Instance.SphereRadius));
         }
         else
         {
-            StartCoroutine(ChangeScale(0.0f));
-
-            OnCast = false;
+            StartCoroutine(ChangeScale(
+                0.0f));
         }
+
+        OnCast = !OnCast;
     }
     
-    private float RadiusVelocity;
-        
-    private Vector3 MeshVelocity;
-    private Vector3 ScaleOnRadius;
+    private Vector3 SphereVelocity;
+    private Vector3 SphereMeshVelocity;
     
-    private IEnumerator ChangeScale(float Scale)
+    private IEnumerator ChangeScale(float Value)
     {
-        ScaleOnRadius = new Vector3(
-            Scale * 2.0f, Scale * 2.0f, Scale * 2.0f);
+        Vector3 Scale = new Vector3(Value, Value, Value);
         
-        while (SphereCollider.radius != Scale ||
-               SphereMesh.localScale != ScaleOnRadius)
+        while (Sphere.localScale != Scale ||
+               SphereMesh.localScale != Scale)
         {
-            SphereCollider.radius = 
-                Mathf.SmoothDamp(SphereCollider.radius, Scale,
-                    ref RadiusVelocity, CharacterContainer.Instance.SphereSmoothTime);
+            Sphere.localScale = Vector3.SmoothDamp(Sphere.localScale, Scale,
+                    ref SphereVelocity, CharacterContainer.Instance.SphereTime);
 
-            SphereMesh.localScale = 
-                Vector3.SmoothDamp(SphereMesh.localScale, ScaleOnRadius,
-                    ref MeshVelocity, CharacterContainer.Instance.SphereSmoothTime);
+            SphereMesh.localScale = Vector3.SmoothDamp(SphereMesh.localScale, Scale,
+                    ref SphereMeshVelocity, CharacterContainer.Instance.SphereTime);
             
             yield return new WaitForFixedUpdate();
         }

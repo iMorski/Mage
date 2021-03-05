@@ -45,7 +45,7 @@ public class CharacterSpherePush : CharacterSphereCapture
     {
         OnWait = !OnWait;
 
-        yield return new WaitForSeconds(CharacterContainer.Instance.SpherePushWaitTime);
+        yield return new WaitForSeconds(CharacterContainer.Instance.SpherePushTime);
 
         OnWait = !OnWait;
     }

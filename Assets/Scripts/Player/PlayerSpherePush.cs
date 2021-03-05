@@ -4,8 +4,8 @@ public class PlayerSpherePush : CharacterSpherePush
 {
     private void Start()
     {
-        PlayerContainer.Instance.Touch.SwipeRelease += OnSwipeRelease;
+        PlayerContainer.Instance.Touch.SwipeByRelease += OnSwipeByRelease;
     }
 
-    private void OnSwipeRelease(Vector2 Direction) { Push(Direction); }
+    private void OnSwipeByRelease(Vector2 Direction) { Push(Direction); }
 }

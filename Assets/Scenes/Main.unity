@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 8232682}
   - component: {fileID: 8232683}
   m_Layer: 5
-  m_Name: Bar-Stamina
+  m_Name: Bar-Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 35, y: 3}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8232683
 MonoBehaviour:
@@ -168,15 +168,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8232681}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99c05ab934e39441582971225911323e, type: 3}
+  m_Script: {fileID: 11500000, guid: c76c8c76645f143c7979ecc21f776cdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 963194227}
   Character: {fileID: 543450651612938441}
   Background: {fileID: 1227214664}
   Amount: {fileID: 1403750191}
-  PlayerMovement: {fileID: 919132147894737528}
-  PlayerSphere: {fileID: 2058179443}
 --- !u!1 &148851608
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,7 +565,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &747480046
 MonoBehaviour:
@@ -992,10 +989,10 @@ RectTransform:
   m_Father: {fileID: 8232682}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 35, y: 2.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1227214664
 MonoBehaviour:
@@ -1085,6 +1082,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TapDistance: 10
+  DoubleTapTime: 0.25
 --- !u!114 &1235843908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1134,7 +1132,6 @@ GameObject:
   - component: {fileID: 1315536608}
   - component: {fileID: 1315536611}
   - component: {fileID: 1315536610}
-  - component: {fileID: 1315536612}
   m_Layer: 0
   m_Name: Container
   m_TagString: Untagged
@@ -1156,14 +1153,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 500
   MoveSmoothTime: 0.05
-  SphereRadius: 2.5
-  SphereSmoothTime: 0.075
+  SphereRadius: 5
+  SphereTime: 0.075
   SphereCaptureRiseDistance: 1
   SphereCaptureRiseForce: 500
   SphereCaptureRiseTime: 0.05
   SphereCaptureTime: 0.05
   SpherePushForce: 1500
-  SpherePushWaitTime: 0.5
+  SpherePushTime: 0.5
 --- !u!4 &1315536609
 Transform:
   m_ObjectHideFlags: 0
@@ -1187,13 +1184,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1315536607}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36a6ab8f22fb74690b78e4d92e7f3608, type: 3}
+  m_Script: {fileID: 11500000, guid: 07c80241052504db091bf0b194ce1660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DistanceToStop: 2.75
-  WaitTimeMin: 0.25
-  WaitTimeMax: 0.65
-  BlockOnScene: []
+  Camera: {fileID: 963194227}
+  BarDistanceToCharacter: 100
+  BarDistanceToBlock: 125
+  BarFadeRate: 5
 --- !u!114 &1315536611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1208,23 +1205,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Joystick: {fileID: 2084578127}
   Touch: {fileID: 1235843907}
---- !u!114 &1315536612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1315536607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07c80241052504db091bf0b194ce1660, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BarDistanceToCharacter: 100
-  BarDistanceToBlock: 125
-  BarFadeRate: 5
-  BarStaminaIncreaseRate: 1.5
-  BarStaminaDecreaseRate: 0.5
+  PowerInRate: 1
+  PowerOutRate: 1
 --- !u!1 &1403750189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,10 +1239,10 @@ RectTransform:
   m_Father: {fileID: 8232682}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 35, y: 2.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1403750191
 MonoBehaviour:
@@ -1468,7 +1450,6 @@ GameObject:
   - component: {fileID: 2058179442}
   - component: {fileID: 2058179445}
   - component: {fileID: 2058179443}
-  - component: {fileID: 2058179444}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -1485,7 +1466,7 @@ Transform:
   m_GameObject: {fileID: 2058179441}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 543450651612938441}
   m_RootOrder: 0
@@ -1502,19 +1483,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea86f5697fb7745a2b02d27508a98f5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Sphere: {fileID: 2058179442}
   SphereMesh: {fileID: 1469848749}
---- !u!114 &2058179444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2058179441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8232ac31ddf5346d18704205015ec721, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &2058179445
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1526,7 +1496,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.00001
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2084578125
 GameObject:
@@ -1893,6 +1863,7 @@ GameObject:
   - component: {fileID: 919132147894737525}
   - component: {fileID: 919132147894737524}
   - component: {fileID: 919132147894737528}
+  - component: {fileID: 919132147894737526}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1930,6 +1901,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &919132147894737526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132147894737523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 479dd1796cdc2442e8f00f459c330a5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &919132147894737528
 MonoBehaviour:
   m_ObjectHideFlags: 0

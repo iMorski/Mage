@@ -5,12 +5,15 @@ public class PlayerMovement : CharacterMovement
     private void Start()
     {
         Joystick = PlayerContainer.Instance.Joystick;
+
+        PlayerSphere PlayerSphere = GetComponentInChildren<PlayerSphere>();
         
-        PlayerContainer.Instance.Touch.TouchBegin += OnTouchBegin;
-        PlayerContainer.Instance.Touch.TouchFinish += OnTouchFinish;
+        PlayerSphere.CastBegin += OnCastBegin;
+        PlayerSphere.CastFinish += OnCastFinish;
     }
 
-    private void OnTouchBegin() { ChangeState(); }
-    private void OnTouchFinish() { ChangeState(); }
+    private void OnCastBegin() { ChangeState(); }
+    private void OnCastFinish() { ChangeState(); }
+    
     private void FixedUpdate() { ChangePosition(Joystick.Direction); }
 }
