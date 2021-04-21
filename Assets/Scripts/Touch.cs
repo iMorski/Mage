@@ -5,8 +5,7 @@ using UnityEngine.EventSystems;
 
 public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    [SerializeField] private float TapDistance;
-    [SerializeField] private float DoubleTapTime;
+    public float TapDistance;
     
     public delegate void OnTapBegin();
     public event OnTapBegin TapBegin;
@@ -17,15 +16,6 @@ public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
     public delegate void OnTapFinish();
     public event OnTapFinish TapFinish;
     
-    public delegate void OnDoubleTapBegin();
-    public event OnDoubleTapBegin DoubleTapBegin;
-    
-    public delegate void OnDoubleTap();
-    public event OnDoubleTap DoubleTap;
-    
-    public delegate void OnDoubleTapFinish();
-    public event OnDoubleTapFinish DoubleTapFinish;
-    
     public delegate void OnSwipeByDistance(Vector2 Direction);
     public event OnSwipeByDistance SwipeByDistance;
     
@@ -35,9 +25,6 @@ public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
     private Vector2 BeginMousePosition;
 
     private bool TapCheck;
-    
-    private bool DoubleTapCheck;
-    private bool DoubleTapCheckDone;
 
     public void OnPointerDown(PointerEventData Data)
     {
@@ -46,23 +33,15 @@ public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
         TapCheck = !TapCheck;
         
         TapBegin?.Invoke();
-            
-        BeginMousePosition = MousePosition(Data);
 
-        if (DoubleTapCheck)
-        {
-            DoubleTapCheck = !DoubleTapCheck;
-            DoubleTapCheckDone = !DoubleTapCheckDone;
-            
-            DoubleTapBegin?.Invoke();
-        }
+        BeginMousePosition = MousePosition(Data);
     }
 
     private bool OnSwipeCheck;
     
     public void OnDrag(PointerEventData Data)
     {
-        if (!OnSwipeCheck && !DragInDistance(Data))
+        if (!OnSwipeCheck && !DragInTapDistance(Data))
         {
             OnSwipeCheck = !OnSwipeCheck;
             
@@ -78,39 +57,14 @@ public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
             
             TapFinish?.Invoke();
 
-            if (DragInDistance(Data))
+            if (DragInTapDistance(Data))
             {
                 Tap?.Invoke();
             }
         }
-
-        if (DoubleTapCheckDone)
-        {
-            DoubleTapCheckDone = !DoubleTapCheckDone;
-            
-            DoubleTapFinish?.Invoke();
-
-            if (DragInDistance(Data))
-            {
-                DoubleTap?.Invoke();
-            }
-        }
-        else if (!DoubleTapCheck)
-        {
-            DoubleTapCheck = !DoubleTapCheck;
-            
-            StartCoroutine(DoubleTapCheckTime());
-        }
         
-        if (!DragInDistance(Data)) SwipeByRelease?.Invoke(GetDirection(Data));
+        if (!DragInTapDistance(Data)) SwipeByRelease?.Invoke(GetDirection(Data));
         if (OnSwipeCheck) OnSwipeCheck = !OnSwipeCheck;
-    }
-
-    private IEnumerator DoubleTapCheckTime()
-    {
-        yield return new WaitForSeconds(DoubleTapTime);
-        
-        if (DoubleTapCheck) DoubleTapCheck = !DoubleTapCheck;
     }
 
     private Vector2 GetDirection(PointerEventData Data)
@@ -127,7 +81,7 @@ public class Touch : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerU
         return DirectionNormalized;
     }
 
-    private bool DragInDistance(PointerEventData Data)
+    private bool DragInTapDistance(PointerEventData Data)
     {
         return Vector2.Distance(MousePosition(Data), BeginMousePosition) < TapDistance;
     }

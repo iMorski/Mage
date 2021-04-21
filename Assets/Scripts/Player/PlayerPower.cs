@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlayerPower : MonoBehaviour
 {
-    [NonSerialized] public float Power = 1.0f;
+    [NonSerialized] public float PowerCharge01 = 1.0f;
+    [NonSerialized] public float PowerCharge02 = 1.0f;
+    [NonSerialized] public float PowerCharge03 = 1.0f;
     
     private void Start()
     {
@@ -13,31 +15,75 @@ public class PlayerPower : MonoBehaviour
         PlayerSphere.CastBegin += OnCastBegin;
         PlayerSphere.CastFinish += OnCastFinish;
     }
-    
-    private Coroutine Coroutine;
 
-    private void OnCastBegin() { Coroutine = StartCoroutine(PowerOut()); }
-    private void OnCastFinish() { Coroutine = StartCoroutine(PowerIn()); }
-    
-    private IEnumerator PowerIn()
+    private bool OnCast;
+
+    private void OnCastBegin()
     {
-        if (Coroutine != null) StopCoroutine(Coroutine);
+        OnCast = !OnCast;
         
-        while (Power < 1.0f)
+        StopAllCoroutines();
+        
+        if (!(PowerCharge03 < 1.0f))
         {
-            Power = Power + PlayerContainer.Instance.PowerInRate * Time.fixedDeltaTime;
+            PowerCharge03 = 0.0f;
+        }
+        else if (!(PowerCharge02 < 1.0f))
+        {
+            PowerCharge02 = PowerCharge03;
+            PowerCharge03 = 0.0f;
+            
+            //StartCoroutine(PowerUpCharge02());
+        }
+        else if (!(PowerCharge01 < 1.0f))
+        {
+            PowerCharge01 = PowerCharge02;
+            PowerCharge02 = 0.0f;
+            
+            //StartCoroutine(PowerUpCharge01());
+        }
+    }
+
+    private void OnCastFinish()
+    {
+        OnCast = !OnCast;
+        
+        StopAllCoroutines();
+        
+        if (PowerCharge01 < 1.0f) StartCoroutine(PowerUpCharge01());
+        else if (PowerCharge02 < 1.0f) StartCoroutine(PowerUpCharge02());
+        else if (PowerCharge03 < 1.0f) StartCoroutine(PowerUpCharge03());
+    }
+
+    private IEnumerator PowerUpCharge01()
+    {
+        while (PowerCharge01 < 1.0f)
+        {
+            PowerCharge01 = PowerCharge01 + PlayerContainer.Instance.PowerUpRate * Time.fixedDeltaTime;
             
             yield return new WaitForFixedUpdate();
         }
+        
+        if (!OnCast) StartCoroutine(PowerUpCharge02());
     }
     
-    private IEnumerator PowerOut()
+    private IEnumerator PowerUpCharge02()
     {
-        if (Coroutine != null) StopCoroutine(Coroutine);
-        
-        while (Power > 0.0f)
+        while (PowerCharge02 < 1.0f)
         {
-            Power = Power - PlayerContainer.Instance.PowerOutRate * Time.fixedDeltaTime;
+            PowerCharge02 = PowerCharge02 + PlayerContainer.Instance.PowerUpRate * Time.fixedDeltaTime;
+            
+            yield return new WaitForFixedUpdate();
+        }
+        
+        if (!OnCast) StartCoroutine(PowerUpCharge03());
+    }
+    
+    private IEnumerator PowerUpCharge03()
+    {
+        while (PowerCharge03 < 1.0f)
+        {
+            PowerCharge03 = PowerCharge03 + PlayerContainer.Instance.PowerUpRate * Time.fixedDeltaTime;
             
             yield return new WaitForFixedUpdate();
         }

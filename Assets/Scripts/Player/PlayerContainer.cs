@@ -6,9 +6,10 @@ public class PlayerContainer : MonoBehaviour
     
     public Joystick Joystick;
     public Touch Touch;
+    public Touch TouchSphere;
+    public Touch TouchDash;
 
-    public float PowerInRate;
-    public float PowerOutRate;
+    public float PowerUpRate;
 
     private void Awake()
     {

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CharacterSpherePush : CharacterSphereCapture
 {
@@ -23,11 +22,9 @@ public class CharacterSpherePush : CharacterSphereCapture
         else if (BlockInDistance != BlockOnSelect) BlockOnSelect = BlockInDistance;
     }
     
-    private bool OnWait;
-    
     public void Push(Vector2 Direction)
     {
-        if (OnWait || !BlockOnSelect) return;
+        if (!BlockOnSelect) return;
         
         Rigidbody Rigidbody = BlockOnSelect.GetComponent<Rigidbody>();
         Coroutine Coroutine = BlockInSphereCoroutine[
@@ -37,16 +34,5 @@ public class CharacterSpherePush : CharacterSphereCapture
         
         Rigidbody.AddForce(new Vector3(Direction.x, 0.0f,
             Direction.y) * CharacterContainer.Instance.SpherePushForce);
-
-        StartCoroutine(Wait());
-    }
-
-    private IEnumerator Wait()
-    {
-        OnWait = !OnWait;
-
-        yield return new WaitForSeconds(CharacterContainer.Instance.SpherePushTime);
-
-        OnWait = !OnWait;
     }
 }

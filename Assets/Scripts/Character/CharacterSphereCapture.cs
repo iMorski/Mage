@@ -44,10 +44,10 @@ public class CharacterSphereCapture : MonoBehaviour
         {
             float RiseForce = CharacterContainer.Instance.SphereCaptureRiseForce;
             float RiseTime = CharacterContainer.Instance.SphereCaptureRiseTime;
-            
+
             Rigidbody.AddForce(new Vector3(
                 0.0f, 1.0f, 0.0f) * RiseForce);
-
+            
             yield return new WaitForSeconds(RiseTime);
         }
         
@@ -55,8 +55,8 @@ public class CharacterSphereCapture : MonoBehaviour
         
         while (BlockInMotion(Rigidbody))
         {
-            Rigidbody.velocity = Vector3.SmoothDamp(Rigidbody.velocity, 
-                new Vector3(), ref Velocity, CharacterContainer.Instance.SphereCaptureTime);
+            Rigidbody.velocity = Vector3.SmoothDamp(Rigidbody.velocity,
+            new Vector3(), ref Velocity, CharacterContainer.Instance.SphereCaptureTime);
 
             yield return new WaitForFixedUpdate();
         }
@@ -74,6 +74,6 @@ public class CharacterSphereCapture : MonoBehaviour
 
     private bool BlockInMotion(Rigidbody Rigidbody)
     {
-        return Rigidbody.velocity != new Vector3(0.0f, 0.0f, 0.0f);
+        return Rigidbody.velocity != new Vector3();
     }
 }

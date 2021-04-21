@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
+    [Range(0.0f, 1.0f)][SerializeField] private float NullDistance;
+    
     [NonSerialized] public Vector2 Direction;
     [NonSerialized] public float Distance;
 
@@ -63,10 +65,12 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         HandleArea.transform.position = BeginMousePosition;
         Handle.transform.position = MousePosition(Data);
         
-        Direction = new Vector2(DirectionInPixelInCircle.x / HandleAreaRadius,
+        Distance = Vector2.Distance(new Vector2(), DirectionInPixelInCircle) / HandleAreaRadius;
+        
+        if (Distance > NullDistance) Direction = new Vector2(
+            DirectionInPixelInCircle.x / HandleAreaRadius,
             DirectionInPixelInCircle.y / HandleAreaRadius);
-        Distance = Vector2.Distance(new Vector2(0.0f, 0.0f), 
-                       DirectionInPixelInCircle) / HandleAreaRadius;
+        else Direction = new Vector2();
     }
 
     public void OnPointerUp(PointerEventData Data)

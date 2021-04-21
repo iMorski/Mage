@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ public class CharacterSphere : MonoBehaviour
     [SerializeField] private Transform Sphere;
     [SerializeField] private Transform SphereMesh;
 
-    private bool OnCast;
+    [NonSerialized] public bool OnCast;
 
     public void ChangeState()
     {

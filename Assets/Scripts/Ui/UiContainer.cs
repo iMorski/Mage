@@ -5,11 +5,9 @@ public class UiContainer : MonoBehaviour
     public static UiContainer Instance;
 
     public Camera Camera;
-    
-    public float BarDistanceToCharacter;
-    public float BarDistanceToBlock;
-    
-    public float BarFadeRate;
+    public float BarDistance;
+    public Color BarPowerColorMain;
+    public Color BarPowerColorOnCharge;
 
     private void Awake()
     {
